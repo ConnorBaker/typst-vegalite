@@ -1,15 +1,16 @@
-#import "@preview/ctxjs:0.1.1"
+#import "@preview/ctxjs:0.3.1"
 
-#let vegalite-bytecode = read("vegalite.kbc1", encoding: none)
-#let ctx-name = "@preview/vegalite"
+#let nulite-bytecode = read("nulite.kbc1", encoding: none)
 
-#{
-  _ = ctxjs.create-context(ctx-name)
-  _ = ctxjs.load-module-bytecode(ctx-name, vegalite-bytecode)
-}
+#let nulite-js-module = ctxjs.new-context(
+  load: (
+    ctxjs.load.load-module-bytecode(nulite-bytecode),
+  ),
+)
+
+#let eval-later(js) = ctxjs.ctx.eval-later(js)
 
 #let render(width: auto, height: auto, zoom: 1, spec) = {
-  
   layout(size => {
     let calc_height = height
     let calc_width = width
@@ -26,13 +27,19 @@
     calc_height = (calc_height).pt()
     calc_width = (calc_width).pt()
 
-  let spec2 = spec + (width: calc_width / zoom, height: calc_height / zoom)
+    let spec2 = spec + (width: calc_width / zoom, height: calc_height / zoom)
 
-  image.decode(ctxjs.call-module-function(
-      ctx-name,
-      "vegalite",
-      "render_vl_helper",
-      (spec2,)
-    ))
+    image(
+      bytes(
+        ctxjs.ctx.call-module-function(
+          nulite-js-module,
+          "nulite",
+          "render",
+          (spec2,),
+        ),
+      ),
+      format: "svg",
+      fit: "cover",
+    )
   })
 }

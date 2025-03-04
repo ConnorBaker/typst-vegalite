@@ -1,6 +1,7 @@
 [package]
 name = "nulite"
 version = "0.1.1"
+compiler = "0.13.0"
 entrypoint = "lib.typ"
 authors = ["j-mueller"]
 license = "MIT"
@@ -11,5 +12,5 @@ repository = "https://github.com/j-mueller/typst-vegalite"
 keywords = ["charts", "plot", "vegalite", "plotting"]
 disciplines = ["mathematics"]
 categories = ["visualization", "integration"]
-compiler = "0.11.1"
-exclude = ["examples"]
+
+exclude = ["examples", "test"]
